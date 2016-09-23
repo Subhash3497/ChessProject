@@ -359,6 +359,7 @@ int main(void)
     Move move;
     char **board = createChessBoard();
     
+    
     // With this test case, I'm checking whether your movePiece() function
     // correctly moves a piece based on a Move that I know has been properly
     // initialized. (This is to ensure that you don't initialize Move structs

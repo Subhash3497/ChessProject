@@ -25,6 +25,7 @@
 /* Begin PBXFileReference section */
 		F27738281D7C738300642F87 /* ChessProject */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = ChessProject; sourceTree = BUILT_PRODUCTS_DIR; };
 		F277382B1D7C738300642F87 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		F27738321D7C7A7E00642F87 /* ChessMoves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChessMoves.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +59,7 @@
 			isa = PBXGroup;
 			children = (
 				F277382B1D7C738300642F87 /* main.c */,
+				F27738321D7C7A7E00642F87 /* ChessMoves.h */,
 			);
 			path = ChessProject;
 			sourceTree = "<group>";
@@ -249,6 +251,7 @@
 				F27738311D7C738300642F87 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
