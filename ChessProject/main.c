@@ -8,12 +8,6 @@
 #include <ctype.h>
 #include "ChessMoves.h"
 
-void failwhale(void)
-{
-    printf("fail whale :(\n");
-    exit(0);
-}
-
 char **createChessBoard(void)
 {
 	int rows = 8;
@@ -93,6 +87,9 @@ char **playTheGame(Game *g)
 {
     char **board = createChessBoard();
     printChessBoard(board);
+    Move *white = NULL;
+    Move *black = NULL;
+    parseNotationString(g, white, black);
 
 
     return board;
@@ -133,11 +130,11 @@ void checkPiece(char *tok, Move *x)
             x->piece = 'P';
             break;
         }
-        
+
     }
-    
-    
-    
+
+
+
 }
 
 void checkFrom( char *tok, Move *x)
@@ -145,7 +142,7 @@ void checkFrom( char *tok, Move *x)
     x->from_loc.col = '\0';
     int i;
     //col
-    
+
     x->from_loc.col = 'x';
 
     for (i = 0; i < (strlen(tok) - 2); i++)
@@ -175,7 +172,7 @@ void checkFrom( char *tok, Move *x)
             x->from_loc.col = 'h';
         }
     }
-    
+
 
     x->from_loc.row = -1;
     //row
@@ -213,24 +210,16 @@ void checkFrom( char *tok, Move *x)
         {
             x->from_loc.row = 8;
         }
-        
     }
-
-    
-    
-    
-    
-    
-    
 }
 
 void checkTo(char *tok, Move *x)
 {
     //col
     int i;
-    
+
     x->to_loc.col = 'x';
-    
+
     for (i = 0; i < strlen(tok); i++)
     {
         if (tok[i] == 'a'){
@@ -258,8 +247,8 @@ void checkTo(char *tok, Move *x)
             x->to_loc.col = 'h';
         }
     }
-    
-    
+
+
     x->to_loc.row = -1;
     //row
     for (i = 0; i < strlen(tok); i++)
@@ -296,19 +285,20 @@ void checkTo(char *tok, Move *x)
         {
             x->to_loc.row = 8;
         }
-        
+
     }
 
-    
-    
-    
-    
-    
+
+
+
+
+
 }
 
 void parseNotationString(char *str, Move *whiteMove, Move *blackMove)
 {
-    char input_data[30];
+    char *input_data;
+    input_data = malloc(sizeof(char)*strlen(str));
     strcpy(input_data, str);
     char *token;
     int i = 0;
@@ -317,101 +307,351 @@ void parseNotationString(char *str, Move *whiteMove, Move *blackMove)
     token = strtok(input_data, " ");
     token = strtok((NULL)," ");
     whiteMove->color = 1;
-    
-    
+
+
     while (i < strlen(token))
     {
         if (token[i] == 'x')
             whiteMove->isCapture = 1;
         i++;
-        
+
     }
     checkPiece(token, whiteMove);
     checkFrom(token, whiteMove);
     checkTo(token, whiteMove);
-    
+
     token = strtok((NULL)," ");
-    
+
     while (i < strlen(token))
     {
         if (token[i] == 'x')
             blackMove->isCapture = 1;
         i++;
     }
-    
+
     checkPiece(token, blackMove);
     checkFrom(token, blackMove);
     checkTo(token, blackMove);
 
 }
 
-
-void movePiece(char **board, Move *move);
-
-void findFromLoc(char **board, Move *move);
-
-double difficultyRating(void);
-
-double hoursSpent(void);
-
-int main(void)
+void movePiece(char **board, Move *move)
 {
-    Move move;
-    char **board = createChessBoard();
-    
-    
-    // With this test case, I'm checking whether your movePiece() function
-    // correctly moves a piece based on a Move that I know has been properly
-    // initialized. (This is to ensure that you don't initialize Move structs
-    // incorrectly in your program and then write a movePiece() function that
-    // only works with that incorrect struct initialization.)
-    
-    // This test case will also help ensure that your movePiece() function does
-    // not output the board to the screen. If it does, this program will print
-    // the board twice after each move (instead of just once), which is not the
-    // expected result.
-    
-    move.to_loc.col = 'f';
-    move.to_loc.row = 3;
-    move.from_loc.col = 'x';
-    move.from_loc.row = -1;
-    move.piece = 'N';
-    move.isCapture = 0;
-    move.color = WHITE;
-    
-    movePiece(board, &move);
-    
-    // Technically, this would be a legal move given this particular board
-    // configuration. We would never encounter this situation in a real game,
-    // though, because White never moves twice in a row without Black making a
-    // move.
-    
-    move.to_loc.col = 'e';
-    move.to_loc.row = 4;
-    move.from_loc.col = 'x';
-    move.from_loc.row = -1;
-    move.piece = 'P';
-    move.isCapture = 0;
-    move.color = WHITE;
-    
-    movePiece(board, &move);
-    
-    move.to_loc.col = 'b';
-    move.to_loc.row = 5;
-    move.from_loc.col = 'x';
-    move.from_loc.row = -1;
-    move.piece = 'B';
-    move.isCapture = 0;
-    move.color = WHITE;
-    
-    movePiece(board, &move);
-    
-    printTestCaseBoard(board);
-    
-    // This program has a nasty memory leak, but I don't want to call your
-    // destroyBoard() function in case it's broken. I want this test case's
-    // success to be based entirely on your movePiece() function, and no other
-    // functions.
-    
-    return 0;
+	char *y = NULL;
+	char *toy = NULL;
+	int x;
+	int tox;
+	int transfx;
+	int transfy;
+
+	int transtx;
+	int transty;
+	char *pieceinfo;
+
+
+
+	if(move->from_loc.col == 'x' || move->from_loc.row == -1)
+	{
+		findFromLoc(board, move);
+		x = move->from_loc.row;
+		y = move->from_loc.col;
+
+		if(y == 'a')
+			transfy = 0;
+		else if(y == 'b')
+			transfy = 1;
+		else if(y == 'c')
+			transfy = 2;
+		else if(y == 'd')
+			transfy = 3;
+		else if(y == 'e')
+			transfy = 4;
+		else if(y == 'f')
+			transfy = 5;
+		else if(y == 'g')
+			transfy = 6;
+		else if(y == 'h')
+			transfy = 7;
+
+		if(x == 8)
+			transfx = 0;
+		else if(x == 7)
+			transfx = 1;
+		else if(x == 6)
+			transfx = 2;
+		else if(x == 5)
+			transfx = 3;
+		else if(x == 4)
+			transfx = 4;
+		else if(x == 3)
+			transfx = 5;
+		else if(x == 2)
+			transfx = 6;
+		else if(x == 1)
+			transfx = 7;
+
+		board[transfx][transfy] = ' ';
+
+		toy = move->to_loc.col;
+		tox = move->to_loc.row;
+
+		if(toy == 'a')
+			transty = 0;
+		else if(toy == 'b')
+			transty = 1;
+		else if(toy == 'c')
+			transty = 2;
+		else if(toy == 'd')
+			transty = 3;
+		else if(toy == 'e')
+			transty = 4;
+		else if(toy == 'f')
+			transty = 5;
+		else if(toy == 'g')
+			transty = 6;
+		else if(toy == 'h')
+			transty = 7;
+
+		if(tox == 8)
+			transtx = 0;
+		else if(tox == 7)
+			transtx = 1;
+		else if(tox == 6)
+			transtx = 2;
+		else if(tox == 5)
+			transtx = 3;
+		else if(tox == 4)
+			transtx = 4;
+		else if(tox == 3)
+			transtx = 5;
+		else if(tox == 2)
+			transtx = 6;
+		else if(tox == 1)
+			transtx = 7;
+
+		pieceinfo = move->piece;
+
+		if(move->color == 1)
+			pieceinfo = tolower(pieceinfo);
+
+		board[transtx][transty] = pieceinfo;
+	}
+	else
+	{
+		x = move->from_loc.row;
+		y = move->from_loc.col;
+
+		if(y == 'a')
+			transfy = 0;
+		else if(y == 'b')
+			transfy = 1;
+		else if(y == 'c')
+			transfy = 2;
+		else if(y == 'd')
+			transfy = 3;
+		else if(y == 'e')
+			transfy = 4;
+		else if(y == 'f')
+			transfy = 5;
+		else if(y == 'g')
+			transfy = 6;
+		else if(y == 'h')
+			transfy = 7;
+
+		if(x == 8)
+			transfx = 0;
+		else if(x == 7)
+			transfx = 1;
+		else if(x == 6)
+			transfx = 2;
+		else if(x == 5)
+			transfx = 3;
+		else if(x == 4)
+			transfx = 4;
+		else if(x == 3)
+			transfx = 5;
+		else if(x == 2)
+			transfx = 6;
+		else if(x == 1)
+			transfx = 7;
+
+		board[transfx][transfy] = ' ';
+
+		toy = move->to_loc.col;
+		tox = move->to_loc.row;
+
+		if(toy == 'a')
+			transty = 0;
+		else if(toy == 'b')
+			transty = 1;
+		else if(toy == 'c')
+			transty = 2;
+		else if(toy == 'd')
+			transty = 3;
+		else if(toy == 'e')
+			transty = 4;
+		else if(toy == 'f')
+			transty = 5;
+		else if(toy == 'g')
+			transty = 6;
+		else if(toy == 'h')
+			transty = 7;
+
+		if(tox == 8)
+			transtx = 0;
+		else if(tox == 7)
+			transtx = 1;
+		else if(tox == 6)
+			transtx = 2;
+		else if(tox == 5)
+			transtx = 3;
+		else if(tox == 4)
+			transtx = 4;
+		else if(tox == 3)
+			transtx = 5;
+		else if(tox == 2)
+			transtx = 6;
+		else if(tox == 1)
+			transtx = 7;
+
+		pieceinfo = move->piece;
+
+		if(move->color == 1)
+			pieceinfo = tolower(pieceinfo);
+
+		board[transtx][transty] = pieceinfo;
+	}
+
+
+
+
+
+
+}
+
+void findFromLoc(char **board, Move *move)
+{
+	int x;
+	int *y;
+	int transty;
+	int transtx;
+
+	x = move->to_loc.row;
+	y = move->to_loc.col;
+
+	if(y == 'a')
+		transty = 0;
+	else if(y == 'b')
+		transty = 1;
+	else if(y == 'c')
+		transty = 2;
+	else if(y == 'd')
+		transty = 3;
+	else if(y == 'e')
+		transty = 4;
+	else if(y == 'f')
+		transty = 5;
+	else if(y == 'g')
+		transty = 6;
+	else if(y == 'h')
+		transty = 7;
+
+	if(x == 8)
+		transtx = 0;
+	else if(x == 7)
+		transtx = 1;
+	else if(x == 6)
+		transtx = 2;
+	else if(x == 5)
+		transtx = 3;
+	else if(x == 4)
+		transtx = 4;
+	else if(x == 3)
+		transtx = 5;
+	else if(x == 2)
+		transtx = 6;
+	else if(x == 1)
+		transtx = 7;
+
+	//white move add numbers
+	if(move->color == 1)
+	{
+		if(move->piece == 'P')
+		{
+			move->from_loc.row = ((move->to_loc.row) + 1);
+		}
+		else if(move->piece == 'R')
+		{
+			for(int i = transtx; i < 8; i++)
+			{
+				for(int i = transtx; i < 0; i--)
+				{
+					for(int j = transty; j < 8; j++)
+					{
+						for(int j = transty; j < 0; j--)
+						{
+
+						}
+					}
+				}
+			}
+			move->from_loc.row = ((move->to_loc.row) );
+		}
+		else if(move->piece == 'K')
+		{
+
+		}
+		else if(move->piece == 'B')
+		{
+
+		}
+		else if(move->piece == 'Q')
+		{
+
+		}
+		else if(move->piece == 'K')
+		{
+
+		}
+	}//Black Move subtract numbers
+	else if(move->color == 0)
+	{
+		if(move->piece == 'P')
+		{
+			move->from_loc.row = ((move->to_loc.row) - 1);
+		}
+		else if(move->piece == 'R')
+		{
+
+
+		}
+		else if(move->piece == 'N')
+		{
+
+		}
+		else if(move->piece == 'B')
+		{
+
+		}
+		else if(move->piece == 'Q')
+		{
+
+		}
+		else if(move->piece == 'K')
+		{
+
+		}
+	}
+}
+
+double difficultyRating(void)
+{
+	double x = 4.0;
+	return x;
+}
+
+double hoursSpent(void)
+{
+	return 30;
+
 }
