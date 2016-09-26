@@ -104,7 +104,6 @@ char **playTheGame(Game *g)
         printChessBoard(board);
     }
     
-    
     return board;
 }
 
@@ -116,7 +115,7 @@ void checkPiece(char *tok, Move *x)                                 // This is a
         if (tok[i] == 'R')
         {
             x->piece = 'R';                                         // I know the break statements and the use of multiple ifs instead of else ifs
-            break;                                                  // are wierd, but this was the only way i could make it work.
+            break;                                                  // are wierd, but this was the only way i could make it work. I was getting compile errors otherwise.
         }
         if (tok[i] == 'N')
         {
@@ -143,51 +142,53 @@ void checkPiece(char *tok, Move *x)                                 // This is a
             x->piece = 'P';
             break;
         }
-        
     }
-    
-    
-    
 }
 
 void checkFrom( char *tok, Move *x)                                     // This is an auxiliary function that parses the from location information that
 {                                                                   // is passed in via refrence from parseNotation.
     int i;
-
                                                                     //Parses the column information
     x->from_loc.col = 'x';                                          // sets the default value to x if nothing is found.
     
     for (i = 0; i < (strlen(tok) - 2); i++)
     {
-        if (tok[i] == 'a'){
+        if (tok[i] == 'a')
+        {
             x->from_loc.col = 'a';
         }
-        else if (tok[i] == 'b'){
+        else if (tok[i] == 'b')
+        {
             x->from_loc.col = 'b';
         }
-        else if (tok[i] == 'c'){
+        else if (tok[i] == 'c')
+        {
             x->from_loc.col = 'c';
         }
-        else if (tok[i] == 'd'){
+        else if (tok[i] == 'd')
+        {
             x->from_loc.col = 'd';
         }
-        else if (tok[i] == 'e'){
+        else if (tok[i] == 'e')
+        {
             x->from_loc.col = 'e';
         }
-        else if (tok[i] == 'f'){
+        else if (tok[i] == 'f')
+        {
             x->from_loc.col = 'f';
         }
-        else if (tok[i] == 'g'){
+        else if (tok[i] == 'g')
+        {
             x->from_loc.col = 'g';
         }
-        else if (tok[i] == 'h'){
+        else if (tok[i] == 'h')
+        {
             x->from_loc.col = 'h';
         }
     }
     
                                                                     //Parses the row information
     x->from_loc.row = -1;                                           // sets the default value of -1 if no info is found.
-    
     
     for (i = 0; i < (strlen(tok) - 2); i++)
     {
@@ -228,7 +229,6 @@ void checkFrom( char *tok, Move *x)                                     // This 
 
 void checkTo(char *tok, Move *x)                                     // This is an auxiliary function that parses the to location information
 {                                                                   //  that is passed in via refrence from parseNotation.
-    
                                                                     //Parses the Column information.
     int i;
     
@@ -236,32 +236,39 @@ void checkTo(char *tok, Move *x)                                     // This is 
     
     for (i = 0; i < strlen(tok); i++)
     {
-        if (tok[i] == 'a'){
+        if (tok[i] == 'a')
+        {
             x->to_loc.col = 'a';
         }
-        else if (tok[i] == 'b'){
+        else if (tok[i] == 'b')
+        {
             x->to_loc.col = 'b';
         }
-        else if (tok[i] == 'c'){
+        else if (tok[i] == 'c')
+        {
             x->to_loc.col = 'c';
         }
-        else if (tok[i] == 'd'){
+        else if (tok[i] == 'd')
+        {
             x->to_loc.col = 'd';
         }
-        else if (tok[i] == 'e'){
+        else if (tok[i] == 'e')
+        {
             x->to_loc.col = 'e';
         }
-        else if (tok[i] == 'f'){
+        else if (tok[i] == 'f')
+        {
             x->to_loc.col = 'f';
         }
-        else if (tok[i] == 'g'){
+        else if (tok[i] == 'g')
+        {
             x->to_loc.col = 'g';
         }
-        else if (tok[i] == 'h'){
+        else if (tok[i] == 'h')
+        {
             x->to_loc.col = 'h';
         }
     }
-    
     
     x->to_loc.row = -1;                                             //Sets default value to -1 if no row infromation is found
                                                                     // parses the row information
@@ -301,12 +308,6 @@ void checkTo(char *tok, Move *x)                                     // This is 
         }
         
     }
-    
-    
-    
-    
-    
-    
 }
 
 void parseNotationString(char *str, Move *whiteMove, Move *blackMove)
@@ -317,18 +318,15 @@ void parseNotationString(char *str, Move *whiteMove, Move *blackMove)
     char *token;
     int i = 0;
     
-    
     token = strtok(input_data, " ");                                //tokenize string
     token = strtok((NULL)," ");
     whiteMove->color = 1;                                            // sets known color informaiton
-    
     
     while (i < strlen(token))                                           // Parses the is isCapture information
     {
         if (token[i] == 'x')
             whiteMove->isCapture = 1;
         i++;
-        
     }                                                               // White Move function Calls
     checkPiece(token, whiteMove);                                   // calls the aux function that checks the piece information.
     checkFrom(token, whiteMove);                                    // calls the aux function that checks the fromLocation information
@@ -446,7 +444,9 @@ void movePiece(char **board, Move *move)
         pieceinfo = &move->piece;                                        // Sets the piece in the to location. This sucessfully completes the move.
         
         if(move->color == 1)
+        {
             pieceinfo = tolower(pieceinfo);                             // sets the piece letter to uppercase or lowercase based on piece color.
+        }
         
         board[transtx][transty] = pieceinfo;
     }
@@ -531,7 +531,9 @@ void movePiece(char **board, Move *move)
         pieceinfo = &move->piece;
         
         if(move->color == 1)
+        {
             pieceinfo = tolower(pieceinfo);
+        }
         
         board[transtx][transty] = *pieceinfo;
     }
@@ -673,7 +675,6 @@ double difficultyRating(void)                                           // It wa
 
 double hoursSpent(void)                                                 // Should actually be countless, but thats not a double... ;)
 {
-    return 35;
-                                                                        //Thanks for taking the time to read through the comments.
+    return 35;                                                          //Thanks for taking the time to read through the comments.
 }                                                                       //Sincerely Tierd,
                                                                         //Subhash Naidu
